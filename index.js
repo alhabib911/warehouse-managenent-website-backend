@@ -51,13 +51,30 @@ async function run() {
         } )
 
        
-        //Update Product
+        // Get product for spacific id 
         app.get('/product/:id', async(req, res) => {
             const id =req.params.id
             const query = {_id: ObjectId(id)}
             const result =await productCollection.findOne(query)
             res.send(result)
         }) 
+
+
+        // Update product
+        app.put('/product/:id', async(req, res) =>{
+            const id = req.params.id;
+            const updateproduct = req.body;
+            const filter = {_id: ObjectId(id)};
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    quantity: updateproduct.quantity
+                }
+            };
+            const result = await productCollection.updateOne(filter, updatedDoc, options);
+            res.send(result);
+
+        })
 
         
     }
